@@ -3,4 +3,7 @@
 
 use \Atome\System;
 
-System::loadOrmInstance();
+$tpl = System::getViewInstance();
+
+$tpl->addGlobal('content', 'Привет');
+$tpl->display('index.twig');

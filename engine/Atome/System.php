@@ -3,7 +3,7 @@
 namespace Atome;
 
 use \Atome\System\Router,
-\Atome\System\Settings,
+    \Atome\System\Settings,
     \R;
 
 /**
@@ -47,7 +47,7 @@ class System
     public static function getViewInstance($templatesDir = null)
     {
         require ATOME_ENGINE_DIR . DS . 'Twig' . DS . 'Autoloader.php';
-        \Twig_Autoloader::register();
+        \Twig_Autoloader::register(true);
 
         $template = !is_null($templatesDir) ? $templatesDir : static::$settings['default_theme'];
         $templatesDir = ATOME_ASSETS_DIR . DS . 'Themes' . DS . $template;

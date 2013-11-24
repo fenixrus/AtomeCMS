@@ -31,7 +31,7 @@ function __autoload($className)
     $classPath = ATOME_ENGINE_DIR . DS;
     if (file_exists($classPath . $className)) {
         require $classPath . $className;
-    } elseif (System::$env == ATOME_ENV_DEVELOPMENT) {
+    } elseif (\Atome\System::$env == ATOME_ENV_DEVELOPMENT) {
         \Atome\Debug::show('Can\'t load class ' . $className, __LINE__, __FILE__, 404, 'Function autoload');
     }
 }
