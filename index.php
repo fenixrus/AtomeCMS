@@ -49,7 +49,7 @@ System::setProjectEnviroment(ATOME_ENV_DEVELOPMENT);
  * Controller init
  */
 try {
-    $controller = System::getControllerInstance();
+    $controller = System::getRouterInstance();
     $route = $controller->getRoutePath(System::$settings['default_route']);
     define('__MODULE__', dirname($route));
     unset($controller);

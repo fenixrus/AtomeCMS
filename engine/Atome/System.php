@@ -2,8 +2,8 @@
 /*COMMENT*/
 namespace Atome;
 
-use \Atome\System\Controller,
-    \Atome\System\Settings,
+use \Atome\System\Router,
+\Atome\System\Settings,
     \R;
 
 /**
@@ -32,11 +32,11 @@ class System
 
     /**
      * Возвращает объект контроллера
-     * @return Controller
+     * @return Router
      */
-    public static function getControllerInstance()
+    public static function getRouterInstance()
     {
-        return new Controller();
+        return new Router();
     }
 
     /**
