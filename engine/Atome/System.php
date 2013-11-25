@@ -31,17 +31,22 @@ class System
     public static $env = 'production';
 
     /**
-     * Возвращает объект контроллера
+     * Возвращает объект роутера
+     * @param null $routPath
+     *
      * @return Router
      */
-    public static function getRouterInstance()
+    public static function getRouterInstance($routPath = null)
     {
-        return new Router();
+        return new Router($routPath = null);
     }
 
     /**
-     * Возвращает объект шаблонизатора
-     * @param null $templatesDir
+     * Возвращает объект шаблонизатора Twig
+     * @param null $templatesDir Папка с шаблонами
+     * @param null $templatesUri URI папки с шаблонами
+     * @param bool $useBuffer Использовать ли буфферизацию
+     *
      * @return \Twig_Environment
      */
     public static function getViewInstance($templatesDir = null, $templatesUri = null, $useBuffer = true)

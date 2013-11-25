@@ -16,20 +16,32 @@ class Router
     const ERROR_NOT_FOUND = 404;
 
     /**
+     * @var string путь к папке с модулями
+     */
+    private $_routPath = ATOME_ASSETS_DIR;
+
+    /**
+     * @param null $routPath путь к папке с модулями
+     */
+    function __construct($routPath = null) {
+        $this->_routPath = $routPath ? : ATOME_ASSETS_DIR . DS . 'Modules';
+    }
+
+    /**
      * Получает путь к модулю по REQUEST_URI или по $defaultUrl
      * @param string $defaultUrl
      * @return null|string
      * @throws \Exception Файл не найден
      */
-    public static function getRoutePath($defaultUrl = '/main/index')
+    public function getRoutePath($defaultUrl = '/main/index')
     {
         static::_parseGet();
         $route = null;
         $url = static::_parseUrl($_SERVER['REQUEST_URI']);
 
-        if (($route = static::_getWayToModule($url)) != null) {
+        if (($route = $this->_getWayToModule($url)) != null) {
             return $route;
-        } elseif (($route = static::_getWayToMain($url, $defaultUrl)) != null) {
+        } elseif (($route = $this->_getWayToMain($url, $defaultUrl)) != null) {
             return $route;
         }
 
@@ -71,7 +83,7 @@ class Router
      * @param $defaultUrl
      * @return null|string
      */
-    private static function _getWayToMain($url, $defaultUrl)
+    private function _getWayToMain($url, $defaultUrl)
     {
         if (reset($url) == null) {
             $defaultUrl = static::_parseUrl($defaultUrl);
@@ -79,8 +91,8 @@ class Router
         }
 
         list($page, $argument) = $url;
-        $route = ATOME_ASSETS_DIR . DS . 'Modules' . DS . 'main' . DS . $page . '.php';
-        if (file_exists($route)) {
+        $route = $this->_routPath . DS . 'main' . DS . $page . '.php';
+        if ( file_exists($route) ) {
             System::$argv = $argument;
             return $route;
         }
@@ -92,11 +104,11 @@ class Router
      * @param $url
      * @return null|string
      */
-    private static function _getWayToModule($url)
+    private function _getWayToModule($url)
     {
         list($module, $page, $argument) = $url;
-        $routeFull = ATOME_ASSETS_DIR . DS . 'Modules' . DS . $module . DS . $page . '.php';
-        if (file_exists($routeFull)) {
+        $routeFull = $this->_routPath . DS . $module . DS . $page . '.php';
+        if ( file_exists($routeFull) ) {
             System::$argv = $argument;
             return $routeFull;
         }
