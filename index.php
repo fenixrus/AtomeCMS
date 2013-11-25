@@ -44,4 +44,4 @@ try {
     Debug::show($error->getMessage(), $error->getCode());
 }
 
-//echo '<p style="background: blue;color: white;text-align: center; padding: 5px;">' . System::generation(3) . '</p>';
+echo '<p style="background: blue;color: white;text-align: center; padding: 5px;">' . System::generation(3) . '</p>';

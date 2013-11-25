@@ -5,6 +5,7 @@ body {
     padding: 0;
     margin: 0;
     font-family: Arial,sans-serif;
+    min-height: 10000px;
 }
 
 header {
@@ -15,7 +16,7 @@ header {
     padding: 5px;
     padding-left: 0;
     padding-right: 0;
-    background: #444444;
+    background: #333333;
     border-bottom: 4px solid #1e90ff;
 }
 
@@ -34,12 +35,11 @@ header ul li {
 }
 
 header ul li a {
-    display: inline-block;
     color: #aaaaaa;
     text-decoration: none;
     outline: none;
     text-align: center;
-    width: inherit;
+    padding: 21px 15px;
 }
 
 header ul.left li {
@@ -51,7 +51,8 @@ header ul.right li {
 }
 
 header ul li a:hover {
-    color: #9acd32;
+    color: #f0f0f0;
+    background: #444444;
 }
 
 header ul li a::first-letter {
