@@ -3,7 +3,10 @@
 
 use \Atome\System;
 
-$tpl = System::getViewInstance();
+// View begin ( configure Twig )
+$tpl = System::getViewInstance(null);
 
-$tpl->addGlobal('content', 'Привет');
-$tpl->display('index.twig');
+echo 'Test'; // {{ content }}
+
+// View end ( $tpl->display('index.twig'); )
+$tpl->execute();

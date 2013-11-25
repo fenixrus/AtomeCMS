@@ -116,6 +116,18 @@ class Twig_Environment
     }
 
     /**
+     * If used buffer, this function will show all buffer's content
+     */
+    public function execute() {
+        if ( ($buffer = ob_get_contents()) != false ) {
+            ob_end_clean();
+            $this->addGlobal('content', $buffer);
+            unset($buffer);
+        }
+        $this->display('index.twig');
+    }
+
+    /**
      * Gets the base template class for compiled templates.
      *
      * @return string The base template class name

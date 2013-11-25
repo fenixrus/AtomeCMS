@@ -44,7 +44,7 @@ class System
      * @param null $templatesDir
      * @return \Twig_Environment
      */
-    public static function getViewInstance($templatesDir = null, $templatesUri = null)
+    public static function getViewInstance($templatesDir = null, $templatesUri = null, $useBuffer = true)
     {
         require ATOME_ENGINE_DIR . DS . 'Twig' . DS . 'Autoloader.php';
         \Twig_Autoloader::register(true);
@@ -61,6 +61,9 @@ class System
         );
         $tpl->addGlobal('root', $templatesUri);
 
+        if ( $useBuffer ) {
+            ob_start();
+        }
         return $tpl;
     }
 
