@@ -37,7 +37,7 @@ class Settings
      * @param bool $autoSave Автоматически сохранять настройки после завершения работы с объектом
      * @throws \Exception Файл не найден
      */
-    function __construct($file = '.cms', $createIfNotExists = true, $autoSave = true)
+    function __construct($file, $createIfNotExists = true, $autoSave = true)
     {
         $this->_autoSave = $autoSave;
         $this->_file = ATOME_CONFIG_DIR . DS . $file . '.php';

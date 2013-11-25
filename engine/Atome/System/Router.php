@@ -5,7 +5,7 @@ namespace Atome\System;
 use Atome\System;
 
 /**
- * Class Controller - парсит URI текущей страницы, и направляет на требуемый модуль автоматически
+ * Class Router - парсит URI текущей страницы, и направляет на требуемый модуль автоматически
  * @package Atome\System
  */
 class Router

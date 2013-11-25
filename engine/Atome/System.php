@@ -44,29 +44,35 @@ class System
      * @param null $templatesDir
      * @return \Twig_Environment
      */
-    public static function getViewInstance($templatesDir = null)
+    public static function getViewInstance($templatesDir = null, $templatesUri = null)
     {
         require ATOME_ENGINE_DIR . DS . 'Twig' . DS . 'Autoloader.php';
         \Twig_Autoloader::register(true);
 
-        $template = !is_null($templatesDir) ? $templatesDir : static::$settings['default_theme'];
-        $templatesDir = ATOME_ASSETS_DIR . DS . 'Themes' . DS . $template;
-        $loader = new \Twig_Loader_Filesystem($templatesDir);
+        $templatesUri = $templatesUri ? : ROOT_THEMES . '/' . static::$settings['default_theme'];
+        $template = $templatesDir ? : ATOME_THEMES_DIR . DS . static::$settings['default_theme'];
+        $loader = new \Twig_Loader_Filesystem($template);
+        $tpl = new \Twig_Environment(
+            $loader,
+            array(
+                 'cache' => $template . DS . '_cache',
+                 'auto_reload' => true,
+            )
+        );
+        $tpl->addGlobal('root', $templatesUri);
 
-        return new \Twig_Environment($loader, array(
-            'cache' => $templatesDir . DS . 'cache',
-            'auto_reload' => true,
-        ));
+        return $tpl;
     }
 
     /**
      * Устанавливает тип проекта в production или development
      * @param string $env
+     * @return void
      */
-    public static function setProjectEnviroment($env = 'production')
+    public static function setProjectEnvironment($env = ATOME_ENV_PRODUCTION)
     {
         static::$env = $env;
-        if (static::$env == 'production') {
+        if (static::$env == ATOME_ENV_PRODUCTION) {
             error_reporting(0);
         } else {
             error_reporting(E_ALL || E_NOTICE);
@@ -76,6 +82,7 @@ class System
     /**
      * Загружает и настраивает Объект ОРМ RedBean
      * @param null $settings
+     * @return void
      */
     public static function loadOrmInstance($settings = null)
     {
@@ -94,6 +101,7 @@ class System
 
     /**
      * Загружает системные настройки
+     * @return void
      */
     public static function loadSystemSettings()
     {
@@ -126,5 +134,14 @@ class System
     public static function hash($string = null)
     {
         return md5(base64_encode(static::$settings['salt']) . md5($string));
+    }
+
+    /**
+     * Вычисляет время отработки скриптов на месте вызова
+     * @param int $round степень округления
+     * @return float время генерации
+     */
+    public static function generation($round = 4) {
+        return round( microtime(true) - START, $round );
     }
 }
