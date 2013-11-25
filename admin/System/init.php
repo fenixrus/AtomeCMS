@@ -1,7 +1,7 @@
 <?php
 /*COMMENT*/
 
-require './engine/init.php';
+include '../../engine/init.php';
 
 /*
  * Autoloader register

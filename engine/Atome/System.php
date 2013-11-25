@@ -82,7 +82,7 @@ class System
         require_once ATOME_ENGINE_DIR . DS . 'RedBean' . DS . 'RedBean.php';
 
         if (is_null($settings)) {
-            $database = new Settings('.database', false, false);
+            $database = new Settings('database', false, false);
             $settings = $database->getAll();
         }
 
@@ -97,7 +97,7 @@ class System
      */
     public static function loadSystemSettings()
     {
-        $settings = new Settings('.system', false, false);
+        $settings = new Settings('system', false, false);
         static::$settings = $settings->getAll();
     }
 
@@ -116,5 +116,15 @@ class System
         $template = file_get_contents($template);
         $template = strtr($template, $params);
         return $template;
+    }
+
+    /**
+     * Хеширует с солью в md5
+     * @param null $string
+     * @return string md5
+     */
+    public static function hash($string = null)
+    {
+        return md5(base64_encode(static::$settings['salt']) . md5($string));
     }
 }
