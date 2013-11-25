@@ -38,7 +38,7 @@ class System
      */
     public static function getRouterInstance($routPath = null)
     {
-        return new Router($routPath = null);
+        return new Router($routPath);
     }
 
     /**
@@ -60,13 +60,13 @@ class System
         $tpl = new \Twig_Environment(
             $loader,
             array(
-                 'cache' => $template . DS . '_cache',
-                 'auto_reload' => true,
+                'cache' => $template . DS . '_cache',
+                'auto_reload' => true,
             )
         );
         $tpl->addGlobal('root', $templatesUri);
 
-        if ( $useBuffer ) {
+        if ($useBuffer) {
             ob_start();
         }
         return $tpl;
@@ -149,7 +149,8 @@ class System
      * @param int $round степень округления
      * @return float время генерации
      */
-    public static function generation($round = 4) {
-        return round( microtime(true) - START, $round );
+    public static function generation($round = 4)
+    {
+        return round(microtime(true) - START, $round);
     }
 }

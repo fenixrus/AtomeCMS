@@ -36,12 +36,12 @@ try {
  */
 try {
     $controller = System::getRouterInstance();
-    $route = $controller->getRoutePath(System::$settings['default_route']);
+    $route = $controller->path(System::$settings['default_route']);
     define('__MODULE__', dirname($route));
     unset($controller);
     require $route;
 } catch (Exception $error) {
-    new Debug($error);
+    Debug::show($error->getMessage(), $error->getCode());
 }
 
 echo '<p style="background: blue;color: white;text-align: center; padding: 5px;">' . System::generation(3) . '</p>';

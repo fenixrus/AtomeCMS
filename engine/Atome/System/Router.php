@@ -21,97 +21,71 @@ class Router
     private $_routPath = ATOME_ASSETS_DIR;
 
     /**
+     * @var array Отфильтрованные данные о пути
+     */
+    private $_urlData;
+
+    /**
      * @param null $routPath путь к папке с модулями
      */
     function __construct($routPath = null) {
         $this->_routPath = $routPath ? : ATOME_ASSETS_DIR . DS . 'Modules';
+        $this->_urlData = $this->_filterPath();
+        $this->_parseGet();
     }
 
     /**
-     * Получает путь к модулю по REQUEST_URI или по $defaultUrl
-     * @param string $defaultUrl
-     * @return null|string
+     * Ищет запрашиваемый модуль исходя из REQUEST_URI
+     * @param string $defaultRoute Путь роутинга по умолчанию
+     * @return string Путь к модулю
      * @throws \Exception Файл не найден
      */
-    public function getRoutePath($defaultUrl = '/main/index')
+    public function path($defaultRoute = 'main/index')
     {
-        static::_parseGet();
-        $route = null;
-        $url = static::_parseUrl($_SERVER['REQUEST_URI']);
+        list($module, $page, $args) = explode('/', $this->_urlData['path'], 3);
 
-        if (($route = $this->_getWayToModule($url)) != null) {
-            return $route;
-        } elseif (($route = $this->_getWayToMain($url, $defaultUrl)) != null) {
-            return $route;
+        if (!is_null($args)) {
+            System::$argv = explode('/', $args);
+        }
+
+        if (isset($module) && !$module) {
+            return $this->_routPath . DS . str_replace('/', DS, $defaultRoute) . '.php';
+        }
+
+        $curr = $this->_routPath . DS . $module . DS . $page . '.php';
+        if (file_exists($curr)) {
+            return $curr;
         }
 
         throw new \Exception('File not found', static::ERROR_NOT_FOUND);
     }
 
     /**
-     * Парсит ключ-значение после знака "?" и изменяет переменную $_GET
+     * Парсит QUERY_STRING и заносит в $_GET
+     * @return void
      */
-    private static function _parseGet()
+    private function _parseGet()
     {
-        $queryString = explode('&', $_SERVER['QUERY_STRING']);
-        if (!empty($queryString)) {
-            foreach ($queryString as $param) {
-                list($key, $value) = explode('=', $param);
-                if (isset($key) && isset($value)) {
-                    $_GET[$key] = $value;
-                }
-            }
+        if (!isset($this->_urlData['query'])) {
+            return;
+        }
+
+        $get = explode('&', $this->_urlData['query']);
+        foreach ($get as $p) {
+            list($var, $val) = explode('=', $p);
+            $_GET[$var] = $val;
         }
     }
 
     /**
-     * Парсит url для роутера
-     * @param $url
-     * @return array|string
+     * Фильтрует REQUEST_URI и возаращает массив данных
+     * @return array Отфильтрованные данные
      */
-    private static function _parseUrl($url)
+    private function _filterPath()
     {
-        $url = $url[0] == '/' ? substr($url, 1) : $url;
-        $url = explode('?', $url);
-        $url = explode('/', reset($url));
-        return $url;
-    }
-
-    /**
-     * Получает путь к модулю по умолчанию
-     * @param $url
-     * @param $defaultUrl
-     * @return null|string
-     */
-    private function _getWayToMain($url, $defaultUrl)
-    {
-        if (reset($url) == null) {
-            $defaultUrl = static::_parseUrl($defaultUrl);
-            return static::_getWayToModule($defaultUrl);
-        }
-
-        list($page, $argument) = $url;
-        $route = $this->_routPath . DS . 'main' . DS . $page . '.php';
-        if ( file_exists($route) ) {
-            System::$argv = $argument;
-            return $route;
-        }
-        return null;
-    }
-
-    /**
-     * Получает путь к указанному в REQUEST_URI модулю
-     * @param $url
-     * @return null|string
-     */
-    private function _getWayToModule($url)
-    {
-        list($module, $page, $argument) = $url;
-        $routeFull = $this->_routPath . DS . $module . DS . $page . '.php';
-        if ( file_exists($routeFull) ) {
-            System::$argv = $argument;
-            return $routeFull;
-        }
-        return null;
+        $path = $_SERVER['REQUEST_URI'];
+        $path = str_ireplace('/admin', '', $path);
+        $path = $path[0] == '/' ? substr($path, 1) : $path;
+        return parse_url($path);
     }
 }

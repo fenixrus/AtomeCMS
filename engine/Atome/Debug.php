@@ -35,24 +35,18 @@ class Debug
     /**
      * Выводит информацию по заданной ошибке
      * @param $message
-     * @param $line
-     * @param $file
      * @param $code
-     * @param $trace
      */
-    public static function show($message, $line, $file, $code, $trace)
+    public static function show($message, $code)
     {
         if (ob_get_contents() != false) {
             ob_end_clean();
         }
         echo System::getParsedTemplate(
-            ATOME_ENGINE_DIR . DS . 'Templates' . DS . 'debug.tpl',
+            ATOME_ENGINE_DIR . DS . 'Templates' . DS . 'error.tpl',
             array(
                 '{message}' => $message,
-                '{line}' => $line,
-                '{file}' => $file,
                 '{code}' => $code,
-                '{trace}' => $trace,
             )
         );
         die;

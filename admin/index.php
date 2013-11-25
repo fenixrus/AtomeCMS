@@ -3,6 +3,9 @@
 
 include '../engine/init.php';
 
+define('ATOME_ADMIN_DIR', ATOME_ROOT_DIR . DS . 'admin');
+define('ATOME_ADMIN_THEME_DIR', ATOME_ADMIN_DIR . DS . 'Assets' . DS . 'Theme');
+
 /*
  * Autoloader register
  */
@@ -25,20 +28,25 @@ function __autoload($className)
 use Atome\System,
     Atome\Debug;
 
-System::loadSystemSettings();
-System::setProjectEnvironment(ATOME_ENV_DEVELOPMENT);
-
-/*
- * Controller init
- */
 try {
-    $router = System::getRouterInstance( ATOME_ROOT_DIR . DS . 'admin' . DS . 'Assets' . DS . 'Modules' );
-    $route = $router->getRoutePath( System::$settings['default_route'] );
-    define('__MODULE__', dirname($route));
-    unset($controller);
-    require $route;
+    System::setProjectEnvironment(ATOME_ENV_DEVELOPMENT);
+    System::loadSystemSettings();
 } catch (Exception $error) {
     new Debug($error);
 }
 
-echo round(microtime(true) - START, 3);
+/*
+ * Controller init
+ */
+
+try {
+    $router = System::getRouterInstance( ATOME_ROOT_DIR . DS . 'admin' . DS . 'Assets' . DS . 'Modules' );
+    $route = $router->path('main/index');
+    define('__MODULE__', dirname($route));
+    unset($controller);
+    require $route;
+} catch (Exception $error) {
+    Debug::show($error->getMessage(), $error->getCode());
+}
+
+echo '<p style="background: blue;color: white;text-align: center; padding: 5px;">' . System::generation(3) . '</p>';

@@ -1,11 +1,15 @@
 <?php
 /*COMMENT*/
 
-// Страница управления файлом index.php модуля main
-
+// Подключаем класс системы
 use Atome\System;
 
-$view = System::getViewInstance();
+// Получаем объект Twig
+$view = System::getViewInstance(ATOME_ADMIN_THEME_DIR);
 
+// Контент....
 echo 'adminka';
+// ...
+
+// Выводим документ
 $view->execute();
