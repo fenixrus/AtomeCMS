@@ -20,6 +20,21 @@ header {
     border-bottom: 4px solid #1e90ff;
 }
 
+header img.logo {
+    margin: -30px;
+    margin-right: -10px;
+    padding: 10px 20px;
+    max-height: 48px;
+    vertical-align: middle;
+}
+
+header span.logo {
+    color: #1e90ff;
+    font-size: 24px;
+    line-height: 16px;
+    vertical-align: middle;
+}
+
 header ul {
     list-style: none;
     padding: 0;

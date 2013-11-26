@@ -36,28 +36,32 @@ class Router
 
     /**
      * Ищет запрашиваемый модуль исходя из REQUEST_URI
-     * @param string $defaultRoute Путь роутинга по умолчанию
+     * @param string $defaultModule Путь роутинга по умолчанию к папке модуля
+     * @param string $defaultPage Путь роутинга по умолчанию к файлу модуля
      * @return string Путь к модулю
      * @throws \Exception Файл не найден
      */
-    public function path($defaultRoute = 'main/index')
+    public function path($defaultModule = 'main', $defaultPage = 'index')
     {
-        list($module, $page, $args) = explode('/', $this->_urlData['path'], 3);
+        $data = explode('/', $this->_urlData['path'], 3);
+        $args = isset($data[2]) ? $data[2] : null;
+        $page = isset($data[1]) ? $data[1] : null;
+        $module = isset($data[0]) ? $data[0] : null;
 
-        if (!is_null($args)) {
+        if ( $args ) {
             System::$argv = explode('/', $args);
         }
 
-        if (isset($module) && !$module) {
-            return $this->_routPath . DS . str_replace('/', DS, $defaultRoute) . '.php';
+        if ( !$module && !$page ) {
+            return $this->_routPath . DS . $defaultModule . DS . $defaultPage . '.php';
         }
 
         $curr = $this->_routPath . DS . $module . DS . $page . '.php';
-        if (file_exists($curr)) {
+        if ( file_exists($curr) ) {
             return $curr;
         }
 
-        throw new \Exception('File not found', static::ERROR_NOT_FOUND);
+        //throw new \Exception('File not found', static::ERROR_NOT_FOUND);
     }
 
     /**

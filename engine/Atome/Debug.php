@@ -51,4 +51,8 @@ class Debug
         );
         die;
     }
+
+    public static function errorPage($code = 404) {
+        header('Location: /assets/Errors/' . $code . '.html');
+    }
 } 
