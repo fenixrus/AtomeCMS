@@ -11,7 +11,7 @@ use Atome\System;
 class Router
 {
     /**
-     * Модуль не найден
+     * Файл не найден
      */
     const ERROR_NOT_FOUND = 404;
 
@@ -36,32 +36,31 @@ class Router
 
     /**
      * Ищет запрашиваемый модуль исходя из REQUEST_URI
-     * @param string $defaultModule Путь роутинга по умолчанию к папке модуля
-     * @param string $defaultPage Путь роутинга по умолчанию к файлу модуля
-     * @return string Путь к модулю
+     * @param string $defaultModule Путь роутинга по умолчанию к модели модуля
+     * @return void
      * @throws \Exception Файл не найден
      */
-    public function path($defaultModule = 'main', $defaultPage = 'index')
+    public function run($defaultModule = 'main')
     {
-        $data = explode('/', $this->_urlData['path'], 3);
-        $args = isset($data[2]) ? $data[2] : null;
-        $page = isset($data[1]) ? $data[1] : null;
-        $module = isset($data[0]) ? $data[0] : null;
+        $data = explode('/', $this->_urlData['path'], 2);
+        $module = isset($data[0]) && $data[0] ? $data[0] : $defaultModule;
+        $uri = isset($data[1]) && $data[1] ? $data[1] : null;
 
-        if ( $args ) {
-            System::$argv = explode('/', $args);
+        $receiver = $this->_routPath . DS . $module . DS . 'Receiver.php';
+        if ( file_exists($receiver) ) {
+            define('__MODULE__', dirname($receiver));
+            require $receiver;
+
+            if ( is_null($uri) ) {
+                $object = new \Receiver( );
+            } else {
+                $object = new \Receiver( $uri );
+            }
+
+            return;
         }
 
-        if ( !$module && !$page ) {
-            return $this->_routPath . DS . $defaultModule . DS . $defaultPage . '.php';
-        }
-
-        $curr = $this->_routPath . DS . $module . DS . $page . '.php';
-        if ( file_exists($curr) ) {
-            return $curr;
-        }
-
-        //throw new \Exception('File not found', static::ERROR_NOT_FOUND);
+        throw new \Exception('File not found in ' . $receiver, static::ERROR_NOT_FOUND);
     }
 
     /**

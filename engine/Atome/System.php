@@ -13,12 +13,6 @@ use \Atome\System\Router,
 class System
 {
     /**
-     * Аргумент передаваемый модулю в адресной строке
-     * @var null
-     */
-    public static $argv = null;
-
-    /**
      * Настройки системы из файла /engine/Config/.system.php
      * @var null
      */

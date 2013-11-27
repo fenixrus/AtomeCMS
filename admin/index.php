@@ -41,12 +41,9 @@ try {
 
 try {
     $router = System::getRouterInstance( ATOME_ROOT_DIR . DS . 'admin' . DS . 'Assets' . DS . 'Modules' );
-    $route = $router->path('main', 'index');
-    define('__MODULE__', dirname($route));
-    unset($controller);
-    require $route;
+    $router->run( 'main' );
 } catch (Exception $error) {
-    new Debug($error);
+    Debug::errorPage( $error->getCode() );
 }
 
 echo '<p style="background: blue;color: white;text-align: center; padding: 5px;">' . System::generation(3) . '</p>';

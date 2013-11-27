@@ -35,11 +35,8 @@ try {
  * Controller init
  */
 try {
-    $controller = System::getRouterInstance();
-    $route = $controller->path(System::$settings['default_route_module'], System::$settings['default_route_page']);
-    define('__MODULE__', dirname($route));
-    unset($controller);
-    require $route;
+    $router = System::getRouterInstance();
+    $router->run( System::$settings['default_module'] );
 } catch (Exception $error) {
     Debug::errorPage($error->getCode());
 }
